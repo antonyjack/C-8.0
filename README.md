@@ -236,4 +236,97 @@ static int TuplePatternsOr(int a, int b) =>
 ```
 
 ## Using Declaration
-> 
+> A `using declaration` is a variable declaration preceded by the `using` keyword. It tells the compiler that the variable being declared should be disposed at the end of the enclosing scope.
+
+```csharp
+ using var file = new StreamReader("Versions.txt");
+var line = string.Empty;
+while((line = file.ReadLine()) != null)
+{
+    System.Console.WriteLine(line);
+}
+file.Close();
+```
+
+## Static Local Functions
+> You can now add the `static` modifier to local functions to ensure that local function doesn't capture (reference) any variables from the enclosing scope. 
+
+```csharp
+static void Main(string[] args)
+{
+    System.Console.WriteLine("Enter numbers to add:");
+    
+    System.Console.WriteLine("Enter number 1 : ");
+    var number1 = Convert.ToInt32(Console.ReadLine());
+    
+    System.Console.WriteLine("Enter number 2 : ");
+    var number2 = Convert.ToInt32(Console.ReadLine());
+
+    Add(number1, number2);
+
+    static void Add(int number1, int number2)
+    {
+        System.Console.WriteLine($"{number1} + {number2} = {number1 + number2}");
+    }
+}
+```
+
+## Asynchronous streams
+> we can create and consume streams asynchronously. A method that returns an asynchronous stream has three properties:
+- It's declared with the `async` modifier.
+- It returns an `IAsyncEnumerable<T>`.
+- The method contains yield return statements to return successive elements in the asynchronous stream.
+
+```csharp
+await foreach (var item in GenerateStingsAsync())
+{
+    System.Console.WriteLine(item);
+}
+
+static async IAsyncEnumerable<string> GenerateStingsAsync()
+{
+    string[] names = new [] {"James", "Raj", "Andrews", "Arun", "Aravinda", "Viki", "Mathi"};
+    foreach (var item in names)
+    {
+        await Task.Delay(5);
+        yield return item;
+    }
+}
+```
+
+## Indices and ranges
+
+> This features provide syntex for accessing the single element or range from the seqence.
+- `System.Index` represents the `Index`
+- The index from end operator `^`, which specifies that an index is relative to the end of the sequence.
+- `System.Range` represents a sub range of a sequence.
+- The range operator `..`, which specifies the start and end of a range as its operands.
+
+```csharp
+string[] names = new string[]
+{
+    "James", // [0] [^7]
+    "Raj", // [1] [^6]
+    "Antony", // [2] [^5]
+    "Samy", // [3] [^4]
+    "Joseph", // [4] [^3]
+    "Andrews", // [5] [^2]
+    "React", // [6] [^1]
+};
+
+System.Console.WriteLine(string.Join(",", names[1..4])); // return Raj, Antony, Samy
+System.Console.WriteLine(string.Join(",", names[^3..^1])); // return Joseph, Andrews
+
+System.Console.WriteLine(string.Join(",", names[..])); // return all the element in the array
+System.Console.WriteLine(string.Join(",", names[..4])); // return James, Raj, Antony, Samy
+System.Console.WriteLine(string.Join(",", names[4..])); //return Joseph, Andrews, React
+
+System.Console.WriteLine(string.Join(",", names[..^4])); // return James, Raj, Antony
+System.Console.WriteLine(string.Join(",", names[^4..])); // return Samy, Joseph, Andrews, React
+
+Range range = 2..5;
+System.Console.WriteLine(string.Join(",", names[range]));
+
+//Fetch 2nd last element from the array
+System.Console.WriteLine(names[^2]);
+```
