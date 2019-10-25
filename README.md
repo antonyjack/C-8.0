@@ -330,3 +330,50 @@ System.Console.WriteLine(string.Join(",", names[range]));
 //Fetch 2nd last element from the array
 System.Console.WriteLine(names[^2]);
 ```
+
+## Null-coalescing assignment
+> null-coalescing assignment operator `??=` used to assign the value of its right-hand operand to its left-hand operand only if the left-hand operand evaluates to `null`.
+
+> Previous C# versions we can evaluates `null` using following ways:
+```csharp
+string Name = null;
+
+//Before C# 8.0 
+if(string.IsNullOrEmpty(Name))
+    Name = "James";
+
+Name = Name ?? "James";
+
+System.Console.WriteLine($"Before C# 8.0 => Name = Name ?? \"James\" : Result = {Name}");
+```
+
+> With the help of null-coalescing assignment operator `??=`, we can simplify the above code.
+
+```csharp
+string Name = null;
+//After C# 8.0
+Name ??= "James";
+
+System.Console.WriteLine($"After C# 8.0 => Name ??= \"James\" : Result = {Name}");
+```
+
+## Enhancement of interpolated verbatim strings
+> Order of the `$` and `@` tokens in interpolated verbatim strings can be any: both `$@"..."` and `@$"..."` are valid interpolated verbatim strings. In earlier C# versions, the `$` token must appear before the `@` token.
+
+```csharp
+//Before C# 8.0 Interpolation
+string PathBuild = $@"c:\test\{Name}";
+
+System.Console.WriteLine($"Before C# 8.0 => {PathBuild}");
+
+PathBuild = null;
+
+//After C# 8.0 Interpolation
+PathBuild = @$"c:\test\{Name}";
+
+System.Console.WriteLine($"Before C# 8.0 => {PathBuild}");
+```
+
+## Nullable reference types
+
+> For nonnullable reference types, the compiler uses flow analysis to ensure that local variables are initialized to a non-null value when declared. Fields must be initialized during construction. The compiler generates a warning if the variable is not set by a call to any of the available constructors or by an initializer. Furthermore, nonnullable reference types can't be assigned a value that could be null.
