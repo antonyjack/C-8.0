@@ -10,21 +10,23 @@ namespace NullableReferenceType
     {        
         static void Main(string[] args)
         {
-            Customer customer = null;            
+            Customer customer = null;  // warning CS8600: Converting null literal or possible null value to non-nullable type.    
             Customer customer1 = new Customer();
+            //customer.Display(); // warning CS8602: Dereference of a possibly null reference.
             customer?.Display();
             customer1.Display();
+            //NotNullMethod(customer); // warning CS8600: Converting null literal or possible null value to non-nullable type.
             NotNullMethod(customer1);
             CanBeNullMethod(customer);
         }
                 
         [return: NotNull]
         static string NotNullMethod([DisallowNull]Customer customer)
-        {
-            return null;
+        {            
+            return customer.ToString();
         }
                 
-        [return: MaybeNull]
+        [return: MaybeNull] //warning CS8603: Possible null reference return.
         static string CanBeNullMethod([AllowNull]Customer customer)
         {
             return customer?.ToString();

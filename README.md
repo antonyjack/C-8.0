@@ -374,6 +374,53 @@ PathBuild = @$"c:\test\{Name}";
 System.Console.WriteLine($"Before C# 8.0 => {PathBuild}");
 ```
 
-## Nullable reference types
+## Non-Nullable reference types
 
 > For nonnullable reference types, the compiler uses flow analysis to ensure that local variables are initialized to a non-null value when declared. Fields must be initialized during construction. The compiler generates a warning if the variable is not set by a call to any of the available constructors or by an initializer. Furthermore, nonnullable reference types can't be assigned a value that could be null.
+
+#### Enable Non-Nullable reference types feature:
+> To enable non-nullable reference type feature in your project level. Need to add the following lines in your `.csproj` file.
+
+```xml
+<PropertyGroup>
+    <Nullable>enable</Nullable>
+</PropertyGroup>
+```
+
+> To enable the non-nullable reference type feature only in class level in your project. 
+
+```csharp
+#nullable enable
+public class Customer
+{        
+}
+#nullable restore
+
+```csharp
+class Program
+{        
+    static void Main(string[] args)
+    {
+        Customer customer = null;  // warning CS8600: Converting null literal or possible null value to non-nullable type.    
+        Customer customer1 = new Customer();
+        //customer.Display(); // warning CS8602: Dereference of a possibly null reference.
+        customer?.Display();
+        customer1.Display();
+        //NotNullMethod(customer); // warning CS8600: Converting null literal or possible null value to non-nullable type.
+        NotNullMethod(customer1);
+        CanBeNullMethod(customer);
+    }
+            
+    [return: NotNull]
+    static string NotNullMethod([DisallowNull]Customer customer)
+    {            
+        return customer.ToString();
+    }
+            
+    [return: MaybeNull] //warning CS8603: Possible null reference return.
+    static string CanBeNullMethod([AllowNull]Customer customer)
+    {
+        return customer?.ToString();
+    }    
+}
+```
